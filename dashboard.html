@@ -502,13 +502,55 @@
 @media (prefers-reduced-motion: reduce) {
     .rtp-card { animation: none; }
 }
+
+/* ── Logo PU 3D berputar ── */
+.pu-logo3d {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    perspective: 360px;
+}
+.pu-logo3d-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: puSpin 4.5s linear infinite;
+    will-change: transform;
+}
+.pu-logo3d .face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    backface-visibility: hidden;
+    border-radius: 7px;
+    background: #ffffff;
+    box-shadow: 0 6px 16px rgba(30, 58, 95, 0.28);
+}
+.pu-logo3d .face.back { transform: rotateY(180deg); }
+@keyframes puSpin {
+    from { transform: rotateX(10deg) rotateY(0deg); }
+    to   { transform: rotateX(10deg) rotateY(360deg); }
+}
+.pu-logo3d:hover .pu-logo3d-inner { animation-duration: 1.6s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .pu-logo3d-inner { animation: none; transform: rotateX(10deg); }
+}
 </style>
 
 <div class="rtp-wrapper">
 
     <!-- Top: Logo -->
     <div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
-        <img src="https://transformasidigital.idampalada.com/favicon.ico" alt="Logo Kementerian Pekerjaan Umum" style="width:48px; height:48px; object-fit:contain;">
+        <div class="pu-logo3d" aria-label="Logo Kementerian Pekerjaan Umum" role="img">
+            <div class="pu-logo3d-inner">
+                <img class="face front" src="https://transformasidigital.idampalada.com/favicon.ico" alt="">
+                <img class="face back"  src="https://transformasidigital.idampalada.com/favicon.ico" alt="">
+            </div>
+        </div>
         <div>
             <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">KEMENTERIAN</p>
             <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">PEKERJAAN UMUM</p>
