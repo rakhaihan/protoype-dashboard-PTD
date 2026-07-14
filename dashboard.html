@@ -189,56 +189,72 @@
 .rtp-group-label {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 0.7rem;
+    gap: 11px;
+    padding: 12px 22px;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
 .rtp-group-dot {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.22);
 }
 
-/* UNOR — Gold */
+/* count badge lives on every group header */
+.rtp-group-count {
+    margin-left: auto;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 3px 11px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+}
+
+/* UNOR — Gold bar, navy ink */
 .rtp-table tbody tr.rtp-group-unor {
-    background: var(--gold) !important;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 130%) !important;
 }
 .rtp-table tbody tr.rtp-group-unor .rtp-group-label {
     color: var(--navy-dark);
-    border-left: 3px solid var(--navy);
+    box-shadow: inset 4px 0 0 var(--navy);
 }
-.rtp-table tbody tr.rtp-group-unor .rtp-group-dot {
-    background: var(--navy);
+.rtp-table tbody tr.rtp-group-unor .rtp-group-dot { background: var(--navy-dark); }
+.rtp-table tbody tr.rtp-group-unor .rtp-group-count {
+    background: rgba(21, 43, 71, 0.16);
+    color: var(--navy-dark);
 }
 
-/* UNKER — Navy dalam */
+/* UNKER — Navy bar, gold accent */
 .rtp-table tbody tr.rtp-group-unker {
-    background: var(--navy) !important;
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 130%) !important;
 }
 .rtp-table tbody tr.rtp-group-unker .rtp-group-label {
     color: #ffffff;
-    border-left: 3px solid var(--gold);
+    box-shadow: inset 4px 0 0 var(--gold);
 }
-.rtp-table tbody tr.rtp-group-unker .rtp-group-dot {
-    background: var(--gold);
+.rtp-table tbody tr.rtp-group-unker .rtp-group-dot { background: var(--gold); }
+.rtp-table tbody tr.rtp-group-unker .rtp-group-count {
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
 }
 
-/* UPT — Abu biru dengan aksen navy */
+/* UPT — Slate bar, gold accent */
 .rtp-table tbody tr.rtp-group-upt {
-    background: #c8d5e8 !important;
+    background: linear-gradient(90deg, #64748b 0%, #475569 130%) !important;
 }
 .rtp-table tbody tr.rtp-group-upt .rtp-group-label {
-    color: var(--navy);
-    border-left: 3px solid var(--navy);
+    color: #ffffff;
+    box-shadow: inset 4px 0 0 var(--gold);
 }
-.rtp-table tbody tr.rtp-group-upt .rtp-group-dot {
-    background: var(--navy);
-    opacity: 0.5;
+.rtp-table tbody tr.rtp-group-upt .rtp-group-dot { background: var(--gold); }
+.rtp-table tbody tr.rtp-group-upt .rtp-group-count {
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
 }
 
 /* ═══════════════════════════════════════════
@@ -247,69 +263,126 @@
 .notice-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 28, 50, 0.55);
+    background: rgba(11, 22, 40, 0.62);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
+    animation: noticeFade 0.3s ease both;
 }
+@keyframes noticeFade { from { opacity: 0; } to { opacity: 1; } }
 
 .notice-box {
-    background: white;
-    width: 420px;
+    position: relative;
+    background: #fff;
+    width: 440px;
     max-width: 90%;
-    padding: 32px 28px;
-    border-radius: 14px;
+    border-radius: 18px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(15, 28, 50, 0.25);
+    box-shadow: 0 30px 80px rgba(11, 22, 40, 0.42);
     font-family: 'DM Sans', sans-serif;
-    border-top: 4px solid var(--gold);
-    zoom: 1.40;
+    overflow: hidden;
+    zoom: 1.30;
+    animation: noticePop 0.42s cubic-bezier(.22,1.15,.36,1) both;
+}
+@keyframes noticePop {
+    from { opacity: 0; transform: translateY(18px) scale(.96); }
+    to   { opacity: 1; transform: none; }
+}
+.notice-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 100%);
 }
 
+.notice-head { padding: 34px 30px 0; }
+
 .notice-icon {
-    width: 44px;
-    height: 44px;
-    background: transparent;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, var(--gold-light), #fbe3b3);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 16px;
-    font-size: 3.5rem;
+    margin: 0 auto 18px;
+    font-size: 1.9rem;
+    color: var(--gold-dark);
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.10);
 }
 
 .notice-box h3 {
-    color: #000000;
+    color: var(--navy);
     font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    letter-spacing: 0.02em;
+    font-size: 1.18rem;
+    margin: 0 0 6px;
+    letter-spacing: 0.01em;
+}
+.notice-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin: 0 0 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 600;
 }
 
+.notice-body { padding: 0 30px; }
 .notice-box p {
     font-size: 0.9rem;
-    color: #000000;
+    color: var(--text);
     line-height: 1.7;
-    margin: 0;
+    margin: 0 0 16px;
 }
 
+.notice-deadline {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+    text-align: left;
+}
+.notice-deadline .cal { font-size: 1.35rem; color: var(--navy); flex-shrink: 0; }
+.notice-deadline .dl-date { font-weight: 700; color: var(--navy); font-size: 0.92rem; line-height: 1.2; }
+.notice-deadline .dl-time { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+.notice-deadline .dl-chip {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.notice-foot { padding: 20px 30px 30px; }
 .notice-box button {
-    margin-top: 22px;
-    background: var(--navy);
-    color: white;
+    width: 100%;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+    color: #fff;
     border: none;
-    padding: 11px 28px;
-    border-radius: 8px;
+    padding: 13px 28px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     letter-spacing: 0.02em;
-    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 6px 18px rgba(30, 58, 95, 0.28);
+    transition: transform 0.12s, box-shadow 0.2s;
 }
-.notice-box button:hover  { background: var(--navy-dark); }
+.notice-box button:hover  { transform: translateY(-1px); box-shadow: 0 9px 24px rgba(30, 58, 95, 0.36); }
 .notice-box button:active { transform: scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+    .notice-overlay, .notice-box { animation: none; }
+}
 
 /* ── Login Button ── */
 .rtp-btn-login {
@@ -478,16 +551,22 @@
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%231E3A5F' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
-/* ── Group header unit count ── */
-.rtp-group-count {
-    margin-left: auto;
-    font-size: 0.6rem; font-weight: 700;
-    padding: 3px 10px; border-radius: 20px;
-    background: rgba(0,0,0,0.14); letter-spacing: 0.06em;
-}
-
 /* ── Numeric emphasis: mute the zeros so real data stands out ── */
 .rtp-total.zero { color: var(--text-muted); font-weight: 500; opacity: 0.5; }
+
+/* Non-zero values become pills so the few units with data pop */
+.num-pill {
+    display: inline-block;
+    min-width: 34px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+.num-pill.ukur  { background: var(--navy-light); color: var(--navy); }
+.num-pill.bukti { background: var(--green-light); color: var(--green); }
 
 /* ── Sticky table header ── */
 .rtp-table thead th { position: sticky; top: 0; z-index: 3; }
@@ -2194,19 +2273,29 @@
 
 
 <div id="noticePopup" class="notice-overlay">
-    <div class="notice-box">
-<div class="notice-icon">
-    <i class="fa-solid fa-triangle-exclamation" style="color: rgb(223, 31, 31);"></i>
-</div>
-        <h3>Pemberitahuan</h3>
-        <p>
-            Batas Waktu Pengumpulan Bukti Dukung Lember Kerja Evaluasi Maksimal Pada Tanggal 
-            <strong>17 September 2026 Pukul 23:59 WIB</strong>.
-            <br><br>
-            Setiap unit diharapkan segera melengkapi seluruh indikator
-            <br>beserta bukti dukung yang diperlukan.
-        </p>
-        <button onclick="closeNotice()">Mengerti</button>
+    <div class="notice-box" role="alertdialog" aria-labelledby="noticeTitle" aria-describedby="noticeDesc">
+        <div class="notice-head">
+            <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 id="noticeTitle">Pemberitahuan</h3>
+            <p class="notice-sub">Batas Waktu Pengumpulan</p>
+        </div>
+        <div class="notice-body">
+            <p id="noticeDesc">
+                Setiap unit diharapkan segera melengkapi seluruh indikator beserta
+                <strong>bukti dukung</strong> Lembar Kerja Evaluasi sebelum batas waktu berikut.
+            </p>
+            <div class="notice-deadline">
+                <i class="fa-regular fa-calendar-check cal"></i>
+                <div>
+                    <div class="dl-date">17 September 2026</div>
+                    <div class="dl-time">Pukul 23:59 WIB</div>
+                </div>
+                <span class="dl-chip" id="noticeDays">&ndash; hari lagi</span>
+            </div>
+        </div>
+        <div class="notice-foot">
+            <button onclick="closeNotice()">Saya Mengerti</button>
+        </div>
     </div>
 </div>
 
@@ -2234,8 +2323,10 @@ function closeNotice() {
         var ukur = num(td[2]), bukti = num(td[3]);
         totUkur += ukur; totBukti += bukti;
         if (ukur > 0) aktif++;
-        if (ukur === 0) td[2].classList.add('zero');
-        if (bukti === 0) td[3].classList.add('zero');
+        if (ukur > 0) td[2].innerHTML = '<span class="num-pill ukur">' + fmt(ukur) + '</span>';
+        else td[2].classList.add('zero');
+        if (bukti > 0) td[3].innerHTML = '<span class="num-pill bukti">' + fmt(bukti) + '</span>';
+        else td[3].classList.add('zero');
     });
 
     var pct = totUnit ? Math.round(aktif / totUnit * 100) : 0;
@@ -2261,6 +2352,8 @@ function closeNotice() {
     var deadline = new Date('2026-09-17T23:59:00+07:00');
     var days = Math.max(0, Math.ceil((deadline - new Date()) / 86400000));
     document.getElementById('rtpDays').textContent = days;
+    var noticeDays = document.getElementById('noticeDays');
+    if (noticeDays) noticeDays.textContent = days + ' hari lagi';
 
     // Per-group unit counts
     var groups = Array.prototype.slice.call(document.querySelectorAll('.rtp-group-header'));
