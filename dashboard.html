@@ -434,28 +434,6 @@
     --green-light: #dcfce7;
 }
 
-/* ── Toolbar + Search ── */
-.rtp-toolbar {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
-}
-.rtp-count { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-.rtp-search { position: relative; }
-.rtp-search input {
-    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
-    color: var(--text); background: var(--surface);
-    border: 1.5px solid var(--border); border-radius: 8px;
-    padding: 8px 14px 8px 38px; width: 260px;
-    box-shadow: 0 1px 4px rgba(30,58,95,0.07);
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.rtp-search input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,58,95,0.12); }
-.rtp-search::before {
-    content: ''; position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
-    width: 15px; height: 15px; opacity: 0.45; pointer-events: none;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%231E3A5F' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0'/%3E%3C/svg%3E") no-repeat center / contain;
-}
-
 /* ── Numeric emphasis: mute the zeros so real data stands out ── */
 .rtp-total.zero { color: var(--text-muted); font-weight: 500; opacity: 0.5; }
 
@@ -489,15 +467,6 @@
 
 /* ── Sticky table header ── */
 .rtp-table thead th { position: sticky; top: 0; z-index: 3; }
-
-/* ── No-results row ── */
-.rtp-noresult td { text-align: center; padding: 44px; color: var(--text-muted); font-size: 0.9rem; }
-
-/* ── Responsive ── */
-@media (max-width: 820px) {
-    .rtp-search input { width: 100%; }
-    .rtp-toolbar { flex-direction: column; align-items: stretch; }
-}
 
 @media (prefers-reduced-motion: reduce) {
     .rtp-card { animation: none; }
@@ -682,13 +651,6 @@
         </div>
     </div>
 
-    <!-- Toolbar: live count + search -->
-    <div class="rtp-toolbar">
-        <span class="rtp-count" id="rtpCount"></span>
-        <div class="rtp-search">
-            <input type="text" id="rtpSearch" placeholder="Cari nama unit&hellip;" autocomplete="off" aria-label="Cari nama unit">
-        </div>
-    </div>
 
     <div class="rtp-card">
         <table class="rtp-table">
@@ -2348,7 +2310,6 @@ function closeNotice() {
     function num(td) { return parseInt((td.textContent || '').replace(/\D/g, ''), 10) || 0; }
     function fmt(n) { return n.toLocaleString('id-ID'); }
 
-    var totUnit = rows.length;
 
     // Render angka sebagai pill (nol dibuat pill kosong agar sejajar)
     rows.forEach(function (tr) {
@@ -2385,46 +2346,6 @@ function closeNotice() {
         }
     });
 
-    // Search / filter
-    var countEl = document.getElementById('rtpCount');
-    var input = document.getElementById('rtpSearch');
-    function setCount(shown) {
-        countEl.textContent = 'Menampilkan ' + fmt(shown) + ' dari ' + fmt(totUnit) + ' unit';
-    }
-    setCount(totUnit);
-
-    var noResult = null;
-    input.addEventListener('input', function () {
-        var q = this.value.trim().toLowerCase(), shown = 0;
-        rows.forEach(function (tr) {
-            var name = (tr.querySelectorAll('td')[1].textContent || '').toLowerCase();
-            var match = !q || name.indexOf(q) !== -1;
-            tr.style.display = match ? '' : 'none';
-            if (match) shown++;
-        });
-        // Hide groups with no visible rows
-        groups.forEach(function (g) {
-            var vis = 0, el = g.nextElementSibling;
-            while (el && !el.classList.contains('rtp-group-header')) {
-                if (el.classList.contains('rtp-data-row') && el.style.display !== 'none') vis++;
-                el = el.nextElementSibling;
-            }
-            g.style.display = vis ? '' : 'none';
-        });
-        setCount(shown);
-        if (shown === 0) {
-            if (!noResult) {
-                var tb = document.querySelector('.rtp-table tbody');
-                noResult = document.createElement('tr');
-                noResult.className = 'rtp-noresult';
-                noResult.innerHTML = '<td colspan="4">Tidak ada unit yang cocok dengan pencarian.</td>';
-                tb.appendChild(noResult);
-            }
-            noResult.style.display = '';
-        } else if (noResult) {
-            noResult.style.display = 'none';
-        }
-    });
 })();
 </script>
 
