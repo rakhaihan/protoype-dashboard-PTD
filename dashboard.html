@@ -29,48 +29,73 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
 :root {
-    --navy:        #1E3A5F;
-    --navy-dark:   #152b47;
-    --navy-light:  #e8edf5;
-    --gold:        #F59E0B;
-    --gold-dark:   #d97706;
-    --gold-light:  #fef3c7;
-    --text:        #1a2a42;
-    --text-muted:  #64748b;
-    --border:      #dde4ef;
-    --surface:     #ffffff;
-    --shadow:      0 4px 24px rgba(30, 58, 95, 0.09);
-    --radius:      12px;
+    /* Brand navy */
+    --navy:        #23395B;   /* header / primary dark */
+    --navy-dark:   #1b2c47;
+    --navy-light:  #E9EEF5;
+    /* Row blues */
+    --row-bg:      #2F4F75;
+    --row-hover:   #3B5F8A;
+    /* Accent gold (desaturasi, kalem) */
+    --gold:        #D9A441;
+    --gold-dark:   #c08e34;
+    --gold-light:  #FAF1D7;
+    /* Neutrals */
+    --page-bg:             #F5F7FA;
+    --text:                #23395B;
+    --text-muted:          #64748b;
+    --text-on-dark:        #FFFFFF;
+    --text-on-dark-muted:  #D6E0F0;
+    --border:              #E5E7EB;
+    --surface:             #FFFFFF;
+    /* Badge */
+    --badge-bg:    #FAF1D7;
+    --badge-text:  #23395B;
+    /* Effects */
+    --shadow:        0 6px 20px rgba(35, 57, 91, 0.08);
+    --shadow-hover:  0 4px 12px rgba(35, 57, 91, 0.10);
+    --shadow-soft:   0 2px 8px  rgba(35, 57, 91, 0.06);
+    --radius:        18px;   /* container */
+    --radius-row:    12px;   /* rows */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+
+/* selalu sediakan ruang scrollbar agar lebar kolom tak bergeser saat expand */
+html { overflow-y: scroll; }
+body { background: var(--page-bg); }
 
 .rtp-wrapper {
     font-family: 'DM Sans', sans-serif;
     color: var(--text);
     width: 100%;
     zoom: 1.25;
+    padding-bottom: 64px;   /* ruang seimbang untuk widget mendatang */
 }
+
+/* Jarak antar-seksi: logo → judul → tabel */
+.pu-brand-row   { margin-bottom: 28px !important; }
+.pu-heading-row { margin-bottom: 28px !important; }
 
 /* ── Heading ── */
 .rtp-heading {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-size: 1.22rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     color: var(--navy);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     text-transform: uppercase;
 }
 .rtp-heading::before {
     content: '';
     display: inline-block;
-    width: 4px;
-    height: 20px;
-    background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-    border-radius: 2px;
+    width: 3px;
+    height: 22px;
+    background: var(--gold);
+    border-radius: 999px;
     flex-shrink: 0;
 }
 
@@ -84,23 +109,25 @@
     font-size: 0.875rem;
     color: var(--text);
     background-color: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 36px 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-row);
+    height: 44px;
+    padding: 0 40px 0 16px;
     width: 200px !important;
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%231E3A5F' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2323395B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    box-shadow: 0 1px 4px rgba(30, 58, 95, 0.07);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    background-position: right 14px center;
+    box-shadow: var(--shadow-soft);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
+.rtp-select:hover { border-color: #cbd5e1; }
 .rtp-select:focus {
     outline: none;
-    border-color: var(--navy);
-    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.18);
 }
 
 /* ── Table Card ── */
@@ -109,7 +136,8 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     overflow: hidden;
-    border: 1.5px solid var(--border);
+    border: 1px solid var(--border);
+    padding: 4px 14px;
     animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both;
 }
 @keyframes fadeUp {
@@ -117,54 +145,67 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Table ── */
+/* ── Table (baris berjarak lembut, bukan garis tebal) ── */
 .rtp-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin: 0;
+    table-layout: fixed;
 }
+/* Nama unit panjang membungkus, tidak melebarkan kolom */
+.rtp-table tbody td:nth-child(2) { overflow-wrap: anywhere; }
 
-/* thead */
-.rtp-table thead tr {
-    background-color: var(--navy);
-}
+/* ── thead ── */
 .rtp-table thead th {
-    color: rgba(255,255,255,0.85);
+    background: var(--navy);
+    color: var(--text-on-dark-muted);
     font-weight: 600;
     font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    padding: 14px 20px;
+    padding: 20px 20px;
     border: none;
-    white-space: nowrap;
+    white-space: normal;
+    vertical-align: middle;
 }
 .rtp-table thead th:first-child {
-    border-left: 3px solid var(--gold);
-    padding-left: 22px;
+    padding-left: 24px;
+    border-top-left-radius: var(--radius-row);
+    border-bottom-left-radius: var(--radius-row);
+    box-shadow: inset 3px 0 0 var(--gold);
+}
+.rtp-table thead th:last-child {
+    border-top-right-radius: var(--radius-row);
+    border-bottom-right-radius: var(--radius-row);
 }
 
-/* data rows */
-.rtp-table tbody tr.rtp-data-row {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-}
-.rtp-table tbody tr.rtp-data-row:nth-child(even) { background: var(--navy-light); }
-.rtp-table tbody tr.rtp-data-row:nth-child(odd)  { background: var(--surface); }
-.rtp-table tbody tr.rtp-data-row:hover           { background: #d5dcea !important; }
-.rtp-table tbody tr.rtp-data-row:last-child      { border-bottom: none; }
-
-.rtp-table tbody td {
-    padding: 12px 20px;
+/* ── data rows (kartu terang) ── */
+.rtp-table tbody tr.rtp-data-row td {
+    background: var(--surface);
+    padding: 14px 20px;
     font-size: 0.88rem;
-    font-weight: 400;
+    font-weight: 500;
     vertical-align: middle;
     border: none;
     color: var(--text);
+    transition: background-color 0.2s ease;
 }
+.rtp-table tbody tr.rtp-data-row:nth-child(even) td { background: #F7F9FC; }
+.rtp-table tbody tr.rtp-data-row td:first-child {
+    padding-left: 24px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.rtp-table tbody tr.rtp-data-row td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.rtp-table tbody tr.rtp-data-row:hover td { background: #EDF2F9; }
 
 /* ── Angka Total ── */
 .rtp-total {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.92rem;
     color: var(--navy);
     font-variant-numeric: tabular-nums;
@@ -179,86 +220,72 @@
 }
 
 /* ═══════════════════════════════════════════
-   GROUP HEADERS
+   GROUP HEADERS (baris utama biru)
    ═══════════════════════════════════════════ */
+.rtp-group-header { cursor: pointer; user-select: none; }
+.rtp-group-header:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 
 .rtp-group-header td {
     padding: 0 !important;
-    border-top: 6px solid var(--surface) !important;
-    border-bottom: 6px solid var(--surface) !important;
+    background: var(--row-bg);
+    border-radius: var(--radius-row);
+    box-shadow: inset 3px 0 0 var(--gold);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-.rtp-group-header {
-    cursor: pointer;
-    user-select: none;
-}
-.rtp-group-header:focus-visible {
-    outline: 2px solid var(--navy);
-    outline-offset: -2px;
+.rtp-group-header:hover td {
+    background: var(--row-hover);
+    box-shadow: inset 3px 0 0 var(--gold), var(--shadow-hover);
 }
 
 .rtp-group-label {
     display: flex;
     align-items: center;
-    gap: 11px;
-    padding: 12px 22px;
+    gap: 12px;
+    padding: 18px 24px;
     font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    color: var(--text-on-dark);
 }
 
-/* chevron indikator buka/tutup accordion (di kiri) */
+/* chevron (di kiri) */
 .rtp-group-chevron {
-    margin-right: 2px;
     flex-shrink: 0;
     font-size: 0.8rem;
-    transition: transform 0.3s cubic-bezier(.22,1,.36,1);
+    color: var(--gold);
+    transition: transform 0.2s ease;
 }
-.rtp-group-header.expanded .rtp-group-chevron {
-    transform: rotate(180deg);
-}
-@media (prefers-reduced-motion: reduce) {
-    .rtp-group-chevron { transition: none; }
-}
+.rtp-group-header.expanded .rtp-group-chevron { transform: rotate(180deg); }
 
+/* status dot */
 .rtp-group-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.22);
+    background: var(--gold);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.14);
+    transition: transform 0.2s ease;
 }
+.rtp-group-header:hover .rtp-group-dot { transform: scale(1.15); }
 
-/* count badge lives on every group header */
+/* badge jumlah unit */
 .rtp-group-count {
     margin-left: auto;
-    font-size: 0.6rem;
-    font-weight: 700;
-    padding: 3px 11px;
-    border-radius: 20px;
-    letter-spacing: 0.08em;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border: 1px solid rgba(217, 164, 65, 0.25);
 }
 
-/* Semua grup (UNOR, UNKER, UPT) — Bar emas, teks & dot navy */
-.rtp-table tbody tr.rtp-group-unor,
-.rtp-table tbody tr.rtp-group-unker,
-.rtp-table tbody tr.rtp-group-upt {
-    background: var(--gold) !important;
-}
-.rtp-table tbody tr.rtp-group-unor  .rtp-group-label,
-.rtp-table tbody tr.rtp-group-unker .rtp-group-label,
-.rtp-table tbody tr.rtp-group-upt   .rtp-group-label {
-    color: var(--navy-dark);
-    box-shadow: inset 4px 0 0 var(--navy);
-}
-.rtp-table tbody tr.rtp-group-unor  .rtp-group-dot,
-.rtp-table tbody tr.rtp-group-unker .rtp-group-dot,
-.rtp-table tbody tr.rtp-group-upt   .rtp-group-dot { background: var(--navy-dark); }
-.rtp-table tbody tr.rtp-group-unor  .rtp-group-count,
-.rtp-table tbody tr.rtp-group-unker .rtp-group-count,
-.rtp-table tbody tr.rtp-group-upt   .rtp-group-count {
-    background: var(--gold-light);
-    color: var(--navy-dark);
+@media (prefers-reduced-motion: reduce) {
+    .rtp-group-chevron, .rtp-group-dot,
+    .rtp-group-header td, .rtp-table tbody tr.rtp-data-row td { transition: none; }
 }
 
 /* ═══════════════════════════════════════════
@@ -396,15 +423,16 @@
     color: #ffffff;
     background: var(--navy);
     border: none;
-    border-radius: 8px;
-    padding: 9px 20px;
+    border-radius: var(--radius-row);
+    padding: 12px 24px;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    letter-spacing: 0.02em;
-    transition: background 0.2s, transform 0.1s;
+    gap: 8px;
+    letter-spacing: 0.03em;
+    box-shadow: var(--shadow-soft);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
 }
 .rtp-btn-login::before {
@@ -418,11 +446,12 @@
 }
 .rtp-btn-login:hover,
 .rtp-btn-login:focus {
-    background: var(--navy-dark);
+    background: var(--row-bg);
     color: #ffffff;
     text-decoration: none;
+    box-shadow: var(--shadow-hover);
 }
-.rtp-btn-login:active { transform: scale(0.97); }
+.rtp-btn-login:active { transform: scale(0.98); }
 
 /* ── Dashboard Button ── */
 .rtp-btn-dashboard {
@@ -646,16 +675,16 @@
     </div>
 
     <!-- Top: Logo -->
-    <div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
+    <div class="pu-brand-row" style="display:flex; align-items:center; gap:16px; margin-top:28px; margin-bottom:20px;">
         <img src="https://transformasidigital.idampalada.com/favicon.ico" alt="Logo Kementerian Pekerjaan Umum" style="width:48px; height:48px; object-fit:contain;">
         <div>
-            <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">KEMENTERIAN</p>
-            <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">PEKERJAAN UMUM</p>
+            <p style="margin:0; font-size:1.28rem; font-weight:600; color:var(--navy); letter-spacing:0.08em; line-height:1.4;">KEMENTERIAN</p>
+            <p style="margin:0; font-size:1.28rem; font-weight:600; color:var(--navy); letter-spacing:0.08em; line-height:1.4;">PEKERJAAN UMUM</p>
         </div>
     </div>
 
     <!-- Baris: Heading (center) | Filter + Login (kanan) -->
-    <div style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; margin-bottom:20px;">
+    <div class="pu-heading-row" style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; margin-bottom:20px;">
         <span></span>
         <h3 class="rtp-heading" style="margin-bottom:0; justify-self:center;">MONITORING PENILAIAN TRANSFORMASI DIGITAL</h3>
 
@@ -679,9 +708,15 @@
 
     <div class="rtp-card">
         <table class="rtp-table">
+            <colgroup>
+                <col style="width:6%">
+                <col style="width:44%">
+                <col style="width:25%">
+                <col style="width:25%">
+            </colgroup>
             <thead>
                 <tr>
-                    <th style="width:56px;">No</th>
+                    <th>No</th>
                     <th>Nama Unit</th>
                     <th>Jumlah Pengukuran</th>
                     <th>Jumlah Bukti Dukung Terupload</th>
