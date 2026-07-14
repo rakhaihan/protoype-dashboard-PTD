@@ -557,6 +557,15 @@
     box-shadow: 0 1px 3px rgba(30, 58, 95, 0.10);
 }
 .num-pill.bukti { background: var(--green-light); color: var(--green); }
+/* Pill kosong: bentuk & ukuran sama, transparan — agar angka 0 sejajar dengan yang terisi */
+.num-pill.empty {
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    opacity: 0.6;
+}
 
 /* ── Sticky table header ── */
 .rtp-table thead th { position: sticky; top: 0; z-index: 3; }
@@ -2313,10 +2322,12 @@ function closeNotice() {
         var ukur = num(td[2]), bukti = num(td[3]);
         totUkur += ukur; totBukti += bukti;
         if (ukur > 0) aktif++;
-        if (ukur > 0) td[2].innerHTML = '<span class="num-pill ukur">' + fmt(ukur) + '</span>';
-        else td[2].classList.add('zero');
-        if (bukti > 0) td[3].innerHTML = '<span class="num-pill bukti">' + fmt(bukti) + '</span>';
-        else td[3].classList.add('zero');
+        td[2].innerHTML = ukur > 0
+            ? '<span class="num-pill ukur">' + fmt(ukur) + '</span>'
+            : '<span class="num-pill empty">0</span>';
+        td[3].innerHTML = bukti > 0
+            ? '<span class="num-pill bukti">' + fmt(bukti) + '</span>'
+            : '<span class="num-pill empty">0</span>';
     });
 
     var pct = totUnit ? Math.round(aktif / totUnit * 100) : 0;
