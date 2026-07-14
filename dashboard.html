@@ -219,7 +219,7 @@
 .rtp-table tbody tr.rtp-group-unor,
 .rtp-table tbody tr.rtp-group-unker,
 .rtp-table tbody tr.rtp-group-upt {
-    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 130%) !important;
+    background: var(--gold) !important;
 }
 .rtp-table tbody tr.rtp-group-unor  .rtp-group-label,
 .rtp-table tbody tr.rtp-group-unker .rtp-group-label,
@@ -233,7 +233,7 @@
 .rtp-table tbody tr.rtp-group-unor  .rtp-group-count,
 .rtp-table tbody tr.rtp-group-unker .rtp-group-count,
 .rtp-table tbody tr.rtp-group-upt   .rtp-group-count {
-    background: rgba(21, 43, 71, 0.16);
+    background: var(--gold-light);
     color: var(--navy-dark);
 }
 
@@ -392,7 +392,12 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
-.rtp-btn-login:hover  { background: var(--navy-dark); }
+.rtp-btn-login:hover,
+.rtp-btn-login:focus {
+    background: var(--navy-dark);
+    color: #ffffff;
+    text-decoration: none;
+}
 .rtp-btn-login:active { transform: scale(0.97); }
 
 /* ── Dashboard Button ── */
@@ -545,7 +550,12 @@
     text-align: center;
     font-variant-numeric: tabular-nums;
 }
-.num-pill.ukur  { background: var(--navy-light); color: var(--navy); }
+.num-pill.ukur  {
+    background: #ffffff;
+    color: var(--navy);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(30, 58, 95, 0.10);
+}
 .num-pill.bukti { background: var(--green-light); color: var(--green); }
 
 /* ── Sticky table header ── */
