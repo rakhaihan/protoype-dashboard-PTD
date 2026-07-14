@@ -215,34 +215,26 @@
     letter-spacing: 0.08em;
 }
 
-/* Warna dasar sama untuk ketiga label: teks putih, aksen & dot emas, badge putih transparan */
+/* Semua grup (UNOR, UNKER, UPT) — Bar emas, teks & dot navy */
+.rtp-table tbody tr.rtp-group-unor,
+.rtp-table tbody tr.rtp-group-unker,
+.rtp-table tbody tr.rtp-group-upt {
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 130%) !important;
+}
 .rtp-table tbody tr.rtp-group-unor  .rtp-group-label,
 .rtp-table tbody tr.rtp-group-unker .rtp-group-label,
 .rtp-table tbody tr.rtp-group-upt   .rtp-group-label {
-    color: #ffffff;
-    box-shadow: inset 4px 0 0 var(--gold);
+    color: var(--navy-dark);
+    box-shadow: inset 4px 0 0 var(--navy);
 }
 .rtp-table tbody tr.rtp-group-unor  .rtp-group-dot,
 .rtp-table tbody tr.rtp-group-unker .rtp-group-dot,
-.rtp-table tbody tr.rtp-group-upt   .rtp-group-dot { background: var(--gold); }
+.rtp-table tbody tr.rtp-group-upt   .rtp-group-dot { background: var(--navy-dark); }
 .rtp-table tbody tr.rtp-group-unor  .rtp-group-count,
 .rtp-table tbody tr.rtp-group-unker .rtp-group-count,
 .rtp-table tbody tr.rtp-group-upt   .rtp-group-count {
-    background: rgba(255,255,255,0.20);
-    color: #ffffff;
-}
-
-/* UNOR — Navy solid */
-.rtp-table tbody tr.rtp-group-unor {
-    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 130%) !important;
-}
-/* UNKER — Teal solid */
-.rtp-table tbody tr.rtp-group-unker {
-    background: linear-gradient(90deg, #0f766e 0%, #0b5b55 130%) !important;
-}
-/* UPT — Indigo solid */
-.rtp-table tbody tr.rtp-group-upt {
-    background: linear-gradient(90deg, #4338ca 0%, #362bab 130%) !important;
+    background: rgba(21, 43, 71, 0.16);
+    color: var(--navy-dark);
 }
 
 /* ═══════════════════════════════════════════
