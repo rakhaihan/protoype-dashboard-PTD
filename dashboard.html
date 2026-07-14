@@ -502,9 +502,116 @@
 @media (prefers-reduced-motion: reduce) {
     .rtp-card { animation: none; }
 }
+
+/* ── Bentuk dekoratif latar (senada motif logo PU) — hiasan saja ── */
+.rtp-wrapper { position: relative; }
+.pu-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 250px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+.pu-decor span { position: absolute; display: block; }
+/* lingkaran navy lembut, kanan atas — memberi kedalaman */
+.pu-decor .s1 {
+    width: 320px; height: 320px; top: -150px; right: -50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(30,58,95,0.10) 0%, rgba(30,58,95,0) 70%);
+}
+/* seperempat lingkaran emas — mengeko bentuk lengkung logo */
+.pu-decor .s2 {
+    width: 110px; height: 110px; top: 24px; right: 150px;
+    background: rgba(245,158,11,0.12);
+    border-radius: 0 110px 0 0;
+}
+/* cincin emas tipis */
+.pu-decor .s3 {
+    width: 130px; height: 130px; top: 95px; right: 46px;
+    border-radius: 50%;
+    border: 12px solid rgba(245,158,11,0.10);
+}
+/* cincin navy kecil, kiri */
+.pu-decor .s4 {
+    width: 74px; height: 74px; top: 150px; left: 66px;
+    border-radius: 50%;
+    border: 10px solid rgba(30,58,95,0.07);
+}
+/* titik emas solid */
+.pu-decor .s5 {
+    width: 16px; height: 16px; top: 46px; right: 300px;
+    border-radius: 50%;
+    background: rgba(245,158,11,0.22);
+}
+/* seperempat lingkaran navy (cerminan s2) */
+.pu-decor .s6 {
+    width: 90px; height: 90px; top: 120px; right: 250px;
+    background: rgba(30,58,95,0.06);
+    border-radius: 0 0 0 90px;
+}
+/* cincin emas mungil, kiri-tengah */
+.pu-decor .s7 {
+    width: 40px; height: 40px; top: 40px; left: 320px;
+    border-radius: 50%;
+    border: 7px solid rgba(245,158,11,0.10);
+}
+/* titik navy solid kecil */
+.pu-decor .s8 {
+    width: 12px; height: 12px; top: 190px; left: 200px;
+    border-radius: 50%;
+    background: rgba(30,58,95,0.12);
+}
+
+/* Lapisan dekoratif bawah */
+.pu-decor-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 240px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+.pu-decor-bottom span { position: absolute; display: block; }
+/* lingkaran navy lembut kiri bawah */
+.pu-decor-bottom .b1 {
+    width: 300px; height: 300px; bottom: -160px; left: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(30,58,95,0.09) 0%, rgba(30,58,95,0) 70%);
+}
+/* seperempat lingkaran emas kiri bawah — motif logo */
+.pu-decor-bottom .b2 {
+    width: 120px; height: 120px; bottom: 30px; left: 40px;
+    background: rgba(245,158,11,0.10);
+    border-radius: 120px 0 0 0;
+}
+/* cincin emas kanan bawah */
+.pu-decor-bottom .b3 {
+    width: 130px; height: 130px; bottom: 40px; right: 60px;
+    border-radius: 50%;
+    border: 12px solid rgba(245,158,11,0.09);
+}
+/* cincin navy kanan bawah */
+.pu-decor-bottom .b4 {
+    width: 70px; height: 70px; bottom: 120px; right: 220px;
+    border-radius: 50%;
+    border: 9px solid rgba(30,58,95,0.06);
+}
 </style>
 
 <div class="rtp-wrapper">
+
+    <!-- Bentuk dekoratif latar (hiasan, tanpa fungsi) -->
+    <div class="pu-decor" aria-hidden="true">
+        <span class="s1"></span>
+        <span class="s2"></span>
+        <span class="s3"></span>
+        <span class="s4"></span>
+        <span class="s5"></span>
+        <span class="s6"></span>
+        <span class="s7"></span>
+        <span class="s8"></span>
+    </div>
 
     <!-- Top: Logo -->
     <div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
@@ -2145,6 +2252,14 @@
                     
                             </tbody>
         </table>
+    </div>
+
+    <!-- Bentuk dekoratif bawah (hiasan, tanpa fungsi) -->
+    <div class="pu-decor-bottom" aria-hidden="true">
+        <span class="b1"></span>
+        <span class="b2"></span>
+        <span class="b3"></span>
+        <span class="b4"></span>
     </div>
 
 </div>
