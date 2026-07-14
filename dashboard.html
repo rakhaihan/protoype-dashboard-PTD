@@ -215,46 +215,34 @@
     letter-spacing: 0.08em;
 }
 
-/* UNOR — Gold bar, navy ink */
-.rtp-table tbody tr.rtp-group-unor {
-    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 130%) !important;
+/* Warna dasar sama untuk ketiga label: teks putih, aksen & dot emas, badge putih transparan */
+.rtp-table tbody tr.rtp-group-unor  .rtp-group-label,
+.rtp-table tbody tr.rtp-group-unker .rtp-group-label,
+.rtp-table tbody tr.rtp-group-upt   .rtp-group-label {
+    color: #ffffff;
+    box-shadow: inset 4px 0 0 var(--gold);
 }
-.rtp-table tbody tr.rtp-group-unor .rtp-group-label {
-    color: var(--navy-dark);
-    box-shadow: inset 4px 0 0 var(--navy);
-}
-.rtp-table tbody tr.rtp-group-unor .rtp-group-dot { background: var(--navy-dark); }
-.rtp-table tbody tr.rtp-group-unor .rtp-group-count {
-    background: rgba(21, 43, 71, 0.16);
-    color: var(--navy-dark);
+.rtp-table tbody tr.rtp-group-unor  .rtp-group-dot,
+.rtp-table tbody tr.rtp-group-unker .rtp-group-dot,
+.rtp-table tbody tr.rtp-group-upt   .rtp-group-dot { background: var(--gold); }
+.rtp-table tbody tr.rtp-group-unor  .rtp-group-count,
+.rtp-table tbody tr.rtp-group-unker .rtp-group-count,
+.rtp-table tbody tr.rtp-group-upt   .rtp-group-count {
+    background: rgba(255,255,255,0.20);
+    color: #ffffff;
 }
 
-/* UNKER — Navy bar, gold accent */
-.rtp-table tbody tr.rtp-group-unker {
+/* UNOR — Navy solid */
+.rtp-table tbody tr.rtp-group-unor {
     background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 130%) !important;
 }
-.rtp-table tbody tr.rtp-group-unker .rtp-group-label {
-    color: #ffffff;
-    box-shadow: inset 4px 0 0 var(--gold);
+/* UNKER — Teal solid */
+.rtp-table tbody tr.rtp-group-unker {
+    background: linear-gradient(90deg, #0f766e 0%, #0b5b55 130%) !important;
 }
-.rtp-table tbody tr.rtp-group-unker .rtp-group-dot { background: var(--gold); }
-.rtp-table tbody tr.rtp-group-unker .rtp-group-count {
-    background: rgba(255,255,255,0.18);
-    color: #ffffff;
-}
-
-/* UPT — Slate bar, gold accent */
+/* UPT — Indigo solid */
 .rtp-table tbody tr.rtp-group-upt {
-    background: linear-gradient(90deg, #64748b 0%, #475569 130%) !important;
-}
-.rtp-table tbody tr.rtp-group-upt .rtp-group-label {
-    color: #ffffff;
-    box-shadow: inset 4px 0 0 var(--gold);
-}
-.rtp-table tbody tr.rtp-group-upt .rtp-group-dot { background: var(--gold); }
-.rtp-table tbody tr.rtp-group-upt .rtp-group-count {
-    background: rgba(255,255,255,0.18);
-    color: #ffffff;
+    background: linear-gradient(90deg, #4338ca 0%, #362bab 130%) !important;
 }
 
 /* ═══════════════════════════════════════════
@@ -593,7 +581,7 @@
 
     <!-- Top: Logo -->
     <div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
-        <img src="favicon.ico" alt="Logo Kementerian Pekerjaan Umum" style="width:48px; height:48px; object-fit:contain;">
+        <img src="https://transformasidigital.idampalada.com/favicon.ico" alt="Logo Kementerian Pekerjaan Umum" style="width:48px; height:48px; object-fit:contain;">
         <div>
             <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">KEMENTERIAN</p>
             <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">PEKERJAAN UMUM</p>
