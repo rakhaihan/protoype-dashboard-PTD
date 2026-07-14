@@ -184,6 +184,8 @@
 
 .rtp-group-header td {
     padding: 0 !important;
+    border-top: 6px solid var(--surface) !important;
+    border-bottom: 6px solid var(--surface) !important;
 }
 .rtp-group-header {
     cursor: pointer;
@@ -205,9 +207,9 @@
     text-transform: uppercase;
 }
 
-/* chevron indikator buka/tutup accordion */
+/* chevron indikator buka/tutup accordion (di kiri) */
 .rtp-group-chevron {
-    margin-left: 12px;
+    margin-right: 2px;
     flex-shrink: 0;
     font-size: 0.8rem;
     transition: transform 0.3s cubic-bezier(.22,1,.36,1);
@@ -2375,7 +2377,7 @@ function closeNotice() {
             var chevron = document.createElement('i');
             chevron.className = 'fa-solid fa-chevron-down rtp-group-chevron';
             chevron.setAttribute('aria-hidden', 'true');
-            label.appendChild(chevron);
+            label.insertBefore(chevron, label.firstChild);
         }
 
         // aksesibilitas
