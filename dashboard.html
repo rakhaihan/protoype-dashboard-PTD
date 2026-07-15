@@ -144,17 +144,23 @@ body { background: var(--page-bg); }
     box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.18);
 }
 
-/* ── Table Card ──
-   Transparan: tiap unit kini kartu kaca yang mengambang di atas
-   latar halaman + ornamen, jadi wadah putih dihilangkan. */
+/* ── Panel Detail (kaca) ──
+   Muncul di bawah kartu saat ada grup yang dibuka. */
 .rtp-card {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-    overflow: visible;      /* agar efek angkat (hover) tidak terpotong */
-    padding: 0;
-    animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(35, 57, 91, 0.10), 0 0 0 1px var(--glass-ring);
+    overflow: hidden;
+    padding: 6px 16px 14px;
+}
+.rtp-card:not(.is-open) { display: none; }
+.rtp-card.is-open { animation: panelIn 250ms ease both; }
+@keyframes panelIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -251,123 +257,138 @@ body { background: var(--page-bg); }
 }
 
 /* ═══════════════════════════════════════════
-   GROUP HEADERS → KARTU KACA (Glassmorphism)
+   MONITORING UNIT → KARTU KACA HORIZONTAL
+   Baris grup lama disembunyikan; perannya digantikan .mu-card
+   yang dibangun via JS (tanpa ubah HTML/business logic).
    ═══════════════════════════════════════════ */
-.rtp-group-header { cursor: pointer; user-select: none; }
-.rtp-group-header td {
-    padding: 0 !important;
-    background: transparent;
-    border: none;
-    box-shadow: none;
+.rtp-group-header { display: none !important; }
+
+.mu-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
-/* Kartu kaca: elemen div di dalam td (bukan td) agar backdrop-filter
-   & transform hover bekerja andal. */
-.rtp-group-label {
-    position: relative;
+.mu-card {
+    height: 280px;
+    border-radius: 22px;
+    padding: 28px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
-    margin: 5px 0;              /* 8px border-spacing + 5px + 5px = 18px antar kartu */
-    padding: 24px;
-    border-radius: var(--radius);
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    cursor: pointer;
     color: var(--text);
-
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow), 0 0 0 1px var(--glass-ring);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    /* Opacity dinaikkan dari contoh .22 → .50: latar dashboard terang,
+       pada .22 kartu nyaris tak terbaca sebagai kartu. */
+    background: rgba(255, 255, 255, 0.50);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 30px rgba(35, 57, 91, 0.10), 0 0 0 1px var(--glass-ring);
+    transition: transform 250ms ease, box-shadow 250ms ease, background-color 250ms ease;
 }
-
-/* aksen kiri tipis + glow lembut */
-.rtp-group-label::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20px;
-    bottom: 20px;
-    width: 4px;
-    border-radius: 0 999px 999px 0;
-    background: var(--gold);
-    box-shadow: var(--gold-glow);
+.mu-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: rgba(255, 255, 255, 0.58);
+    box-shadow: 0 20px 44px rgba(35, 57, 91, 0.16), 0 0 0 1px var(--glass-ring);
 }
+.mu-card:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+.mu-card.expanded { background: rgba(255, 255, 255, 0.64); }
 
-/* hover: angkat & pertegas bayangan */
-.rtp-group-header:hover .rtp-group-label {
-    background: var(--glass-bg-hover);
-    box-shadow: var(--glass-shadow-hover), 0 0 0 1px var(--glass-ring);
-    transform: translateY(-3px) scale(1.01);
-}
-.rtp-group-header:focus-visible .rtp-group-label {
-    outline: 2px solid var(--navy);
-    outline-offset: 2px;
-}
-
-/* chevron (di kiri) — navy demi kontras AA di atas kaca terang */
-.rtp-group-chevron {
-    flex-shrink: 0;
-    font-size: 0.8rem;
-    color: var(--navy);
-    transition: transform 0.2s ease;
-}
-.rtp-group-header.expanded .rtp-group-chevron { transform: rotate(180deg); }
-.rtp-group-header:hover .rtp-group-chevron { transform: scale(1.05); }
-.rtp-group-header.expanded:hover .rtp-group-chevron { transform: rotate(180deg) scale(1.05); }
-
-/* status dot — emas (dekoratif) */
-.rtp-group-dot {
-    width: 9px;
-    height: 9px;
+/* status dot */
+.mu-dot {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    flex-shrink: 0;
     background: var(--gold);
-    box-shadow: var(--gold-glow);
-    transition: transform 0.2s ease;
+    box-shadow: 0 0 12px rgba(217, 164, 65, 0.35);
+    flex-shrink: 0;
+    transition: transform 250ms ease, box-shadow 250ms ease;
 }
-.rtp-group-header:hover .rtp-group-dot { transform: scale(1.15); }
+.mu-card:hover .mu-dot { transform: scale(1.15); }
+.mu-card.expanded .mu-dot { box-shadow: 0 0 0 5px rgba(217, 164, 65, 0.16), 0 0 12px rgba(217, 164, 65, 0.5); }
 
-/* badge pil mengambang */
-.rtp-group-count {
-    margin-left: auto;
-    font-size: 0.62rem;
+/* nama unit */
+.mu-name {
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: var(--badge-glass-bg);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    color: var(--badge-text);
-    border: 1px solid rgba(217, 164, 65, 0.25);
-    box-shadow: var(--glass-shadow-nested);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    line-height: 1.45;
+    margin-top: 4px;
 }
+
+/* angka besar */
+.mu-num {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+}
+.mu-unit {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* tombol kaca */
+.mu-btn {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--navy);
+    background: rgba(255, 255, 255, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 2px 10px rgba(35, 57, 91, 0.06);
+    transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+.mu-card:hover .mu-btn {
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 14px rgba(217, 164, 65, 0.30);
+}
+.mu-chev { font-size: 0.7rem; transition: transform 200ms ease; }
+.mu-card.expanded .mu-chev { transform: rotate(180deg); }
 
 /* ── Responsive ── */
 @media (max-width: 991px) {
-    .rtp-group-label { padding: 20px; gap: 12px; }
+    .mu-cards { grid-template-columns: repeat(2, 1fr); gap: 18px; }
 }
 @media (max-width: 640px) {
-    .rtp-group-label {
-        flex-wrap: wrap;
-        padding: 18px;
-        letter-spacing: 0.03em;
+    /* mobile: geser horizontal dengan snap */
+    .mu-cards {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
     }
-    .rtp-group-count { margin-left: 0; }
+    .mu-card { flex: 0 0 78%; scroll-snap-align: center; height: 260px; }
     .rtp-table tbody tr.rtp-data-row td { padding: 12px 14px; }
     .rtp-table tbody tr.rtp-data-row td:first-child { padding-left: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .rtp-group-chevron, .rtp-group-dot, .rtp-group-label,
+    .mu-card, .mu-dot, .mu-btn, .mu-chev,
     .rtp-table tbody tr.rtp-data-row td { transition: none; }
     .rtp-data-row { animation: none; }
-    .rtp-group-header:hover .rtp-group-label { transform: none; }
+    .mu-card:hover { transform: none; }
+    .rtp-card.is-open { animation: none; }
 }
 
 /* ═══════════════════════════════════════════
@@ -612,10 +633,10 @@ body { background: var(--page-bg); }
 .pu-decor {
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 250px;
+    height: 640px;   /* diperpanjang agar lingkaran juga berada di balik kartu kaca */
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
     pointer-events: none;
     z-index: -1;
 }
@@ -698,6 +719,27 @@ body { background: var(--page-bg); }
     border-radius: 50%;
     background: rgba(35,57,91,0.17);
 }
+/* ── di balik kartu kaca, agar efek blur terlihat ── */
+.pu-decor .s14 {
+    width: 230px; height: 230px; top: 300px; left: 4%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 45%, rgba(217,164,65,0.30) 0%, rgba(217,164,65,0) 72%);
+}
+.pu-decor .s15 {
+    width: 280px; height: 280px; top: 330px; right: 6%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(35,57,91,0.20) 0%, rgba(35,57,91,0) 72%);
+}
+.pu-decor .s16 {
+    width: 150px; height: 150px; top: 360px; left: 44%;
+    border-radius: 50%;
+    border: 16px solid rgba(217,164,65,0.16);
+}
+.pu-decor .s17 {
+    width: 190px; height: 190px; top: 250px; left: 26%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(35,57,91,0.14) 0%, rgba(35,57,91,0) 72%);
+}
 
 /* Lapisan dekoratif bawah */
 .pu-decor-bottom {
@@ -754,6 +796,10 @@ body { background: var(--page-bg); }
         <span class="s11"></span>
         <span class="s12"></span>
         <span class="s13"></span>
+        <span class="s14"></span>
+        <span class="s15"></span>
+        <span class="s16"></span>
+        <span class="s17"></span>
     </div>
 
     <!-- Top: Logo -->
@@ -2471,9 +2517,25 @@ function closeNotice() {
     var noticeDays = document.getElementById('noticeDays');
     if (noticeDays) noticeDays.textContent = days + ' hari lagi';
 
-    // Per-group unit counts + accordion (dropdown) per grup
+    // ── Monitoring Unit: kartu kaca horizontal + accordion ──
+    // Kartu dibangun dari DOM yang sudah ada, jadi tetap sinkron dengan
+    // data dari backend. Logika expand/collapse per grup tidak berubah.
     var groups = Array.prototype.slice.call(document.querySelectorAll('.rtp-group-header'));
+    var panel  = document.querySelector('.rtp-card');
+
+    var cardsWrap = document.createElement('div');
+    cardsWrap.className = 'mu-cards';
+    if (panel && panel.parentNode) panel.parentNode.insertBefore(cardsWrap, panel);
+
+    function syncPanel() {
+        var anyOpen = groups.some(function (g) { return g.classList.contains('expanded'); });
+        if (panel) panel.classList.toggle('is-open', anyOpen);
+    }
+
     groups.forEach(function (g) {
+        var label = g.querySelector('.rtp-group-label');
+        var groupName = label ? label.textContent.trim() : '';
+
         // kumpulkan baris data milik grup ini
         var dataRows = [], el = g.nextElementSibling;
         while (el && !el.classList.contains('rtp-group-header')) {
@@ -2484,38 +2546,43 @@ function closeNotice() {
         // default: collapsed — sembunyikan semua baris data
         dataRows.forEach(function (r) { r.style.display = 'none'; });
 
-        var label = g.querySelector('.rtp-group-label');
-        if (label) {
-            var badge = document.createElement('span');
-            badge.className = 'rtp-group-count';
-            badge.textContent = dataRows.length + ' unit';
-            label.appendChild(badge);
-
-            var chevron = document.createElement('i');
-            chevron.className = 'fa-solid fa-chevron-down rtp-group-chevron';
-            chevron.setAttribute('aria-hidden', 'true');
-            label.insertBefore(chevron, label.firstChild);
-        }
-
-        // aksesibilitas
-        g.setAttribute('role', 'button');
-        g.setAttribute('tabindex', '0');
-        g.setAttribute('aria-expanded', 'false');
+        // ── kartu kaca ──
+        var card = document.createElement('div');
+        card.className = 'mu-card';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-expanded', 'false');
+        card.innerHTML =
+            '<span class="mu-dot" aria-hidden="true"></span>' +
+            '<span class="mu-name"></span>' +
+            '<span class="mu-num"></span>' +
+            '<span class="mu-unit">Unit</span>' +
+            '<span class="mu-btn">Lihat Detail ' +
+                '<i class="fa-solid fa-chevron-down mu-chev" aria-hidden="true"></i>' +
+            '</span>';
+        card.querySelector('.mu-name').textContent = groupName;
+        card.querySelector('.mu-num').textContent  = fmt(dataRows.length);
+        card.setAttribute('aria-label', groupName + ', ' + dataRows.length + ' unit. Lihat detail');
+        cardsWrap.appendChild(card);
 
         function toggle() {
             var expanded = g.classList.toggle('expanded');
+            card.classList.toggle('expanded', expanded);
             g.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            card.setAttribute('aria-expanded', expanded ? 'true' : 'false');
             dataRows.forEach(function (r) { r.style.display = expanded ? '' : 'none'; });
+            syncPanel();
         }
 
-        g.addEventListener('click', toggle);
-        g.addEventListener('keydown', function (e) {
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
                 e.preventDefault();
                 toggle();
             }
         });
     });
+    syncPanel();
 
 })();
 </script>
