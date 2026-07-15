@@ -305,13 +305,6 @@ body { background: var(--page-bg); }
     border-color: rgba(217, 164, 65, 0.50);
 }
 
-/* ikon kategori (di atas judul) */
-.mu-icon {
-    font-size: 22px;
-    color: var(--gold);
-    line-height: 1;
-}
-
 /* status dot */
 .mu-dot {
     width: 12px;
@@ -2549,11 +2542,6 @@ function closeNotice() {
         // default: collapsed — sembunyikan semua baris data
         dataRows.forEach(function (r) { r.style.display = 'none'; });
 
-        // ikon kategori per jenis unit (dekoratif)
-        var iconClass = g.classList.contains('rtp-group-unor') ? 'fa-building-columns'
-                       : g.classList.contains('rtp-group-unker') ? 'fa-briefcase'
-                       : 'fa-building';
-
         // ── kartu kaca (seluruh kartu adalah satu komponen klik) ──
         var card = document.createElement('div');
         card.className = 'mu-card';
@@ -2561,7 +2549,6 @@ function closeNotice() {
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-expanded', 'false');
         card.innerHTML =
-            '<i class="fa-solid ' + iconClass + ' mu-icon" aria-hidden="true"></i>' +
             '<span class="mu-dot" aria-hidden="true"></span>' +
             '<span class="mu-name"></span>' +
             '<span class="mu-num"></span>' +
