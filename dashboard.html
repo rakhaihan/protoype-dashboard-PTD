@@ -259,19 +259,35 @@ body { background: var(--page-bg); }
     backdrop-filter: blur(18px) saturate(160%);
     border: 1px solid rgba(255, 255, 255, 0.45);
     box-shadow: 0 8px 24px rgba(35, 57, 91, 0.08);
-    transition: transform 220ms ease-in-out, box-shadow 220ms ease-in-out,
-                background-color 220ms ease-in-out, border-color 220ms ease-in-out;
+    transition: transform 220ms ease, box-shadow 220ms ease,
+                background-color 220ms ease, border-color 220ms ease, border-width 220ms ease;
 }
+/* hover — kartu belum aktif */
 .mu-card:hover {
-    transform: translateY(-6px) scale(1.02);
+    transform: translateY(-4px);
     background: rgba(255, 255, 255, 0.32);
     border-color: rgba(217, 164, 65, 0.50);
-    box-shadow: 0 14px 32px rgba(35, 57, 91, 0.14);
+    box-shadow: 0 12px 28px rgba(35, 57, 91, 0.10);
 }
 .mu-card:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+
+/* ── Kartu aktif (sedang expanded) — kartu ini yang harus segera dikenali ── */
 .mu-card.expanded {
+    border: 2px solid var(--gold);
     background: rgba(255, 255, 255, 0.38);
-    border-color: rgba(217, 164, 65, 0.50);
+    box-shadow:
+        0 12px 32px rgba(35, 57, 91, 0.12),
+        0 0 0 4px rgba(217, 164, 65, 0.08),
+        0 0 24px rgba(217, 164, 65, 0.12);
+}
+/* hover pada kartu yang sudah aktif — angkat lebih halus, border aktif dipertahankan */
+.mu-card.expanded:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: var(--gold);
+    box-shadow:
+        0 16px 36px rgba(35, 57, 91, 0.14),
+        0 0 0 4px rgba(217, 164, 65, 0.10),
+        0 0 26px rgba(217, 164, 65, 0.14);
 }
 
 /* status dot */
@@ -313,9 +329,9 @@ body { background: var(--page-bg); }
     color: var(--text-muted);
 }
 
-/* Panah kecil di pojok kanan-bawah — pengganti tombol "Lihat Detail".
-   Seluruh kartu sudah bisa diklik; ini hanya petunjuk interaksi
-   sekaligus indikator buka/tutup (berputar saat expanded). */
+/* Chevron indikator buka/tutup, di pojok kanan-bawah. Seluruh kartu
+   sudah bisa diklik — ini hanya petunjuk visual + indikator status:
+   bawah = tertutup, atas (rotate 180°) = terbuka. */
 .mu-arrow {
     position: absolute;
     right: 16px;
@@ -323,11 +339,10 @@ body { background: var(--page-bg); }
     font-size: 13px;
     color: var(--gold);
     opacity: 0.75;
-    transition: transform 220ms ease-in-out, opacity 220ms ease-in-out;
+    transition: transform 220ms ease, opacity 220ms ease;
 }
-.mu-card:hover .mu-arrow { opacity: 1; transform: translateX(2px); }
-.mu-card.expanded .mu-arrow { transform: rotate(90deg); }
-.mu-card.expanded:hover .mu-arrow { transform: rotate(90deg) translateX(2px); }
+.mu-card:hover .mu-arrow { opacity: 1; }
+.mu-card.expanded .mu-arrow { transform: rotate(180deg); }
 
 /* ── Responsive ── */
 @media (max-width: 991px) {
@@ -2472,9 +2487,10 @@ function closeNotice() {
     var noticeDays = document.getElementById('noticeDays');
     if (noticeDays) noticeDays.textContent = days + ' hari lagi';
 
-    // ── Monitoring Unit: kartu kaca horizontal + accordion ──
+    // ── Monitoring Unit: kartu kaca horizontal, accordion single-expand ──
     // Kartu dibangun dari DOM yang sudah ada, jadi tetap sinkron dengan
-    // data dari backend. Logika expand/collapse per grup tidak berubah.
+    // data dari backend. Hanya SATU kartu yang boleh aktif dalam satu waktu;
+    // panel tabel di bawah selalu menampilkan data milik kartu yang aktif.
     var groups = Array.prototype.slice.call(document.querySelectorAll('.rtp-group-header'));
     var panel  = document.querySelector('.rtp-card');
 
@@ -2482,26 +2498,18 @@ function closeNotice() {
     cardsWrap.className = 'mu-cards';
     if (panel && panel.parentNode) panel.parentNode.insertBefore(cardsWrap, panel);
 
-    function syncPanel() {
-        var anyOpen = groups.some(function (g) { return g.classList.contains('expanded'); });
-        if (panel) panel.classList.toggle('is-open', anyOpen);
-    }
-
-    groups.forEach(function (g) {
+    // Kumpulkan tiap unit (grup + kartu + baris datanya) lebih dulu,
+    // baru terapkan status aktif — single source of truth: activeIndex.
+    var units = groups.map(function (g) {
         var label = g.querySelector('.rtp-group-label');
         var groupName = label ? label.textContent.trim() : '';
 
-        // kumpulkan baris data milik grup ini
         var dataRows = [], el = g.nextElementSibling;
         while (el && !el.classList.contains('rtp-group-header')) {
             if (el.classList.contains('rtp-data-row')) dataRows.push(el);
             el = el.nextElementSibling;
         }
 
-        // default: collapsed — sembunyikan semua baris data
-        dataRows.forEach(function (r) { r.style.display = 'none'; });
-
-        // ── kartu kaca (seluruh kartu adalah satu komponen klik) ──
         var card = document.createElement('div');
         card.className = 'mu-card';
         card.setAttribute('role', 'button');
@@ -2512,30 +2520,57 @@ function closeNotice() {
             '<span class="mu-name"></span>' +
             '<span class="mu-num"></span>' +
             '<span class="mu-unit">Unit</span>' +
-            '<i class="fa-solid fa-chevron-right mu-arrow" aria-hidden="true"></i>';
+            '<i class="fa-solid fa-chevron-down mu-arrow" aria-hidden="true"></i>';
         card.querySelector('.mu-name').textContent = groupName;
         card.querySelector('.mu-num').textContent  = fmt(dataRows.length);
         card.setAttribute('aria-label', groupName + ', ' + dataRows.length + ' unit. Lihat detail');
         cardsWrap.appendChild(card);
 
-        function toggle() {
-            var expanded = g.classList.toggle('expanded');
-            card.classList.toggle('expanded', expanded);
-            g.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-            card.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-            dataRows.forEach(function (r) { r.style.display = expanded ? '' : 'none'; });
-            syncPanel();
-        }
+        return { group: g, card: card, dataRows: dataRows, name: groupName };
+    });
 
-        card.addEventListener('click', toggle);
-        card.addEventListener('keydown', function (e) {
+    var activeIndex = -1;
+
+    function setActive(index) {
+        if (index === activeIndex) return; // sudah aktif — tetap terbuka (perilaku direkomendasikan)
+        var prevIndex = activeIndex;
+        activeIndex = index;
+
+        units.forEach(function (u, i) {
+            var isActive = i === index;
+            u.group.classList.toggle('expanded', isActive);
+            u.card.classList.toggle('expanded', isActive);
+            u.group.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+            u.card.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        });
+
+        // Kartu berganti visual (border/shadow/chevron) langsung — transisi
+        // CSS 220ms yang menanganinya. Konten tabel menyusul sesaat setelah
+        // transisi mulai, supaya tidak terasa seperti lompatan mendadak.
+        var swapRows = function () {
+            units.forEach(function (u, i) {
+                var show = i === index;
+                u.dataRows.forEach(function (r) { r.style.display = show ? '' : 'none'; });
+            });
+            if (panel) panel.classList.add('is-open');
+        };
+        if (prevIndex === -1) swapRows();
+        else setTimeout(swapRows, 80);
+    }
+
+    units.forEach(function (u, i) {
+        function activate() { setActive(i); }
+        u.card.addEventListener('click', activate);
+        u.card.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
                 e.preventDefault();
-                toggle();
+                activate();
             }
         });
     });
-    syncPanel();
+
+    // Default: Unit Organisasi (kartu pertama) aktif saat halaman dimuat.
+    if (units.length) setActive(0);
 
 })();
 </script>
