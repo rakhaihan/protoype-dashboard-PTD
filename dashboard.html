@@ -55,8 +55,22 @@
     --shadow:        0 6px 20px rgba(35, 57, 91, 0.08);
     --shadow-hover:  0 4px 12px rgba(35, 57, 91, 0.10);
     --shadow-soft:   0 2px 8px  rgba(35, 57, 91, 0.06);
-    --radius:        18px;   /* container */
-    --radius-row:    12px;   /* rows */
+    --radius:        18px;   /* container / glass card */
+    --radius-row:    12px;   /* nested card */
+
+    /* ── Glassmorphism (light acrylic) ──
+       Latar dashboard terang, jadi opacity dinaikkan dari contoh .18
+       agar kartu tetap terbaca & kontras teks lolos WCAG AA. */
+    --glass-bg:            rgba(255, 255, 255, 0.62);
+    --glass-bg-hover:      rgba(255, 255, 255, 0.72);
+    --glass-nested-bg:     rgba(255, 255, 255, 0.85);
+    --glass-border:        rgba(255, 255, 255, 0.75);
+    --glass-ring:          rgba(35, 57, 91, 0.07);
+    --glass-shadow:        0 8px 32px rgba(35, 57, 91, 0.12);
+    --glass-shadow-hover:  0 14px 40px rgba(35, 57, 91, 0.18);
+    --glass-shadow-nested: 0 2px 10px rgba(35, 57, 91, 0.06);
+    --badge-glass-bg:      rgba(250, 241, 215, 0.92);
+    --gold-glow:           0 0 10px rgba(217, 164, 65, 0.35);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -130,14 +144,16 @@ body { background: var(--page-bg); }
     box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.18);
 }
 
-/* ── Table Card ── */
+/* ── Table Card ──
+   Transparan: tiap unit kini kartu kaca yang mengambang di atas
+   latar halaman + ornamen, jadi wadah putih dihilangkan. */
 .rtp-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    padding: 4px 14px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;      /* agar efek angkat (hover) tidak terpotong */
+    padding: 0;
     animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both;
 }
 @keyframes fadeUp {
@@ -171,37 +187,52 @@ body { background: var(--page-bg); }
 }
 .rtp-table thead th:first-child {
     padding-left: 24px;
-    border-top-left-radius: var(--radius-row);
-    border-bottom-left-radius: var(--radius-row);
-    box-shadow: inset 3px 0 0 var(--gold);
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+    box-shadow: inset 4px 0 0 var(--gold);
 }
 .rtp-table thead th:last-child {
-    border-top-right-radius: var(--radius-row);
-    border-bottom-right-radius: var(--radius-row);
+    border-top-right-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
 }
 
-/* ── data rows (kartu terang) ── */
+/* ── data rows → kartu kaca bersarang (lebih pekat, radius lebih kecil) ──
+   Catatan: sengaja TANPA backdrop-filter. Ada ~151 baris data; memberi
+   backdrop-filter pada tiap sel akan sangat membebani rendering. Karena
+   nested card memang "less transparent", blur praktis tak terlihat. */
 .rtp-table tbody tr.rtp-data-row td {
-    background: var(--surface);
+    background: var(--glass-nested-bg);
     padding: 14px 20px;
     font-size: 0.88rem;
     font-weight: 500;
     vertical-align: middle;
     border: none;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
     color: var(--text);
     transition: background-color 0.2s ease;
 }
-.rtp-table tbody tr.rtp-data-row:nth-child(even) td { background: #F7F9FC; }
+.rtp-table tbody tr.rtp-data-row:nth-child(even) td { background: rgba(247, 249, 252, 0.88); }
 .rtp-table tbody tr.rtp-data-row td:first-child {
     padding-left: 24px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-left: 1px solid var(--glass-border);
+    border-top-left-radius: var(--radius-row);
+    border-bottom-left-radius: var(--radius-row);
 }
 .rtp-table tbody tr.rtp-data-row td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-right: 1px solid var(--glass-border);
+    border-top-right-radius: var(--radius-row);
+    border-bottom-right-radius: var(--radius-row);
+    box-shadow: var(--glass-shadow-nested);
 }
-.rtp-table tbody tr.rtp-data-row:hover td { background: #EDF2F9; }
+.rtp-table tbody tr.rtp-data-row:hover td { background: rgba(237, 242, 249, 0.92); }
+
+/* reveal halus saat grup dibuka (250ms) */
+.rtp-data-row { animation: rowIn 0.25s ease both; }
+@keyframes rowIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ── Angka Total ── */
 .rtp-total {
@@ -220,72 +251,123 @@ body { background: var(--page-bg); }
 }
 
 /* ═══════════════════════════════════════════
-   GROUP HEADERS (baris utama biru)
+   GROUP HEADERS → KARTU KACA (Glassmorphism)
    ═══════════════════════════════════════════ */
 .rtp-group-header { cursor: pointer; user-select: none; }
-.rtp-group-header:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
-
 .rtp-group-header td {
     padding: 0 !important;
-    background: var(--row-bg);
-    border-radius: var(--radius-row);
-    box-shadow: inset 3px 0 0 var(--gold);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-.rtp-group-header:hover td {
-    background: var(--row-hover);
-    box-shadow: inset 3px 0 0 var(--gold), var(--shadow-hover);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
+/* Kartu kaca: elemen div di dalam td (bukan td) agar backdrop-filter
+   & transform hover bekerja andal. */
 .rtp-group-label {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 18px 24px;
-    font-size: 0.72rem;
+    gap: 14px;
+    margin: 5px 0;              /* 8px border-spacing + 5px + 5px = 18px antar kartu */
+    padding: 24px;
+    border-radius: var(--radius);
+    font-size: 0.74rem;
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--text-on-dark);
+    color: var(--text);
+
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), 0 0 0 1px var(--glass-ring);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* chevron (di kiri) */
+/* aksen kiri tipis + glow lembut */
+.rtp-group-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 4px;
+    border-radius: 0 999px 999px 0;
+    background: var(--gold);
+    box-shadow: var(--gold-glow);
+}
+
+/* hover: angkat & pertegas bayangan */
+.rtp-group-header:hover .rtp-group-label {
+    background: var(--glass-bg-hover);
+    box-shadow: var(--glass-shadow-hover), 0 0 0 1px var(--glass-ring);
+    transform: translateY(-3px) scale(1.01);
+}
+.rtp-group-header:focus-visible .rtp-group-label {
+    outline: 2px solid var(--navy);
+    outline-offset: 2px;
+}
+
+/* chevron (di kiri) — navy demi kontras AA di atas kaca terang */
 .rtp-group-chevron {
     flex-shrink: 0;
     font-size: 0.8rem;
-    color: var(--gold);
+    color: var(--navy);
     transition: transform 0.2s ease;
 }
 .rtp-group-header.expanded .rtp-group-chevron { transform: rotate(180deg); }
+.rtp-group-header:hover .rtp-group-chevron { transform: scale(1.05); }
+.rtp-group-header.expanded:hover .rtp-group-chevron { transform: rotate(180deg) scale(1.05); }
 
-/* status dot */
+/* status dot — emas (dekoratif) */
 .rtp-group-dot {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     flex-shrink: 0;
     background: var(--gold);
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.14);
+    box-shadow: var(--gold-glow);
     transition: transform 0.2s ease;
 }
 .rtp-group-header:hover .rtp-group-dot { transform: scale(1.15); }
 
-/* badge jumlah unit */
+/* badge pil mengambang */
 .rtp-group-count {
     margin-left: auto;
     font-size: 0.62rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    padding: 6px 16px;
+    padding: 6px 14px;
     border-radius: 999px;
-    background: var(--badge-bg);
+    background: var(--badge-glass-bg);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     color: var(--badge-text);
     border: 1px solid rgba(217, 164, 65, 0.25);
+    box-shadow: var(--glass-shadow-nested);
+}
+
+/* ── Responsive ── */
+@media (max-width: 991px) {
+    .rtp-group-label { padding: 20px; gap: 12px; }
+}
+@media (max-width: 640px) {
+    .rtp-group-label {
+        flex-wrap: wrap;
+        padding: 18px;
+        letter-spacing: 0.03em;
+    }
+    .rtp-group-count { margin-left: 0; }
+    .rtp-table tbody tr.rtp-data-row td { padding: 12px 14px; }
+    .rtp-table tbody tr.rtp-data-row td:first-child { padding-left: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .rtp-group-chevron, .rtp-group-dot,
-    .rtp-group-header td, .rtp-table tbody tr.rtp-data-row td { transition: none; }
+    .rtp-group-chevron, .rtp-group-dot, .rtp-group-label,
+    .rtp-table tbody tr.rtp-data-row td { transition: none; }
+    .rtp-data-row { animation: none; }
+    .rtp-group-header:hover .rtp-group-label { transform: none; }
 }
 
 /* ═══════════════════════════════════════════
@@ -542,79 +624,79 @@ body { background: var(--page-bg); }
 .pu-decor .s1 {
     width: 320px; height: 320px; top: -150px; right: -50px;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(30,58,95,0.10) 0%, rgba(30,58,95,0) 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(35,57,91,0.17) 0%, rgba(35,57,91,0) 70%);
 }
 /* lingkaran emas lembut — mengeko bentuk lengkung logo */
 .pu-decor .s2 {
     width: 130px; height: 130px; top: 6px; right: 140px;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 40%, rgba(245,158,11,0.20) 0%, rgba(245,158,11,0) 72%);
+    background: radial-gradient(circle at 40% 40%, rgba(217,164,65,0.30) 0%, rgba(217,164,65,0) 72%);
 }
 /* cincin emas tipis */
 .pu-decor .s3 {
     width: 130px; height: 130px; top: 95px; right: 46px;
     border-radius: 50%;
-    border: 12px solid rgba(245,158,11,0.10);
+    border: 12px solid rgba(217,164,65,0.18);
 }
 /* cincin navy kecil, kiri */
 .pu-decor .s4 {
     width: 74px; height: 74px; top: 150px; left: 66px;
     border-radius: 50%;
-    border: 10px solid rgba(30,58,95,0.07);
+    border: 10px solid rgba(35,57,91,0.12);
 }
 /* titik emas solid */
 .pu-decor .s5 {
     width: 16px; height: 16px; top: 46px; right: 300px;
     border-radius: 50%;
-    background: rgba(245,158,11,0.22);
+    background: rgba(217,164,65,0.32);
 }
 /* lingkaran navy lembut (cerminan s2) */
 .pu-decor .s6 {
     width: 110px; height: 110px; top: 100px; right: 240px;
     border-radius: 50%;
-    background: radial-gradient(circle at 60% 60%, rgba(30,58,95,0.10) 0%, rgba(30,58,95,0) 72%);
+    background: radial-gradient(circle at 60% 60%, rgba(35,57,91,0.17) 0%, rgba(35,57,91,0) 72%);
 }
 /* cincin emas mungil, kiri-tengah */
 .pu-decor .s7 {
     width: 40px; height: 40px; top: 40px; left: 320px;
     border-radius: 50%;
-    border: 7px solid rgba(245,158,11,0.10);
+    border: 7px solid rgba(217,164,65,0.18);
 }
 /* titik navy solid kecil */
 .pu-decor .s8 {
     width: 12px; height: 12px; top: 190px; left: 200px;
     border-radius: 50%;
-    background: rgba(30,58,95,0.12);
+    background: rgba(35,57,91,0.19);
 }
 /* cincin navy sedang, tengah atas */
 .pu-decor .s9 {
     width: 100px; height: 100px; top: -30px; left: 46%;
     border-radius: 50%;
-    border: 11px solid rgba(30,58,95,0.05);
+    border: 11px solid rgba(35,57,91,0.10);
 }
 /* lingkaran emas lembut, tengah bawah */
 .pu-decor .s10 {
     width: 90px; height: 90px; top: 155px; left: 45%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0) 72%);
+    background: radial-gradient(circle at 50% 50%, rgba(217,164,65,0.24) 0%, rgba(217,164,65,0) 72%);
 }
 /* titik emas mungil */
 .pu-decor .s11 {
     width: 10px; height: 10px; top: 26px; left: 190px;
     border-radius: 50%;
-    background: rgba(245,158,11,0.20);
+    background: rgba(217,164,65,0.30);
 }
 /* cincin emas mungil, kanan tengah */
 .pu-decor .s12 {
     width: 34px; height: 34px; top: 150px; right: 340px;
     border-radius: 50%;
-    border: 6px solid rgba(245,158,11,0.09);
+    border: 6px solid rgba(217,164,65,0.16);
 }
 /* titik navy, kanan atas */
 .pu-decor .s13 {
     width: 14px; height: 14px; top: 70px; left: 40%;
     border-radius: 50%;
-    background: rgba(30,58,95,0.10);
+    background: rgba(35,57,91,0.17);
 }
 
 /* Lapisan dekoratif bawah */
@@ -633,25 +715,25 @@ body { background: var(--page-bg); }
 .pu-decor-bottom .b1 {
     width: 300px; height: 300px; bottom: -160px; left: -60px;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(30,58,95,0.09) 0%, rgba(30,58,95,0) 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(35,57,91,0.15) 0%, rgba(35,57,91,0) 70%);
 }
 /* lingkaran emas lembut kiri bawah — motif logo */
 .pu-decor-bottom .b2 {
     width: 150px; height: 150px; bottom: 10px; left: 20px;
     border-radius: 50%;
-    background: radial-gradient(circle at 45% 45%, rgba(245,158,11,0.16) 0%, rgba(245,158,11,0) 72%);
+    background: radial-gradient(circle at 45% 45%, rgba(217,164,65,0.26) 0%, rgba(217,164,65,0) 72%);
 }
 /* cincin emas kanan bawah */
 .pu-decor-bottom .b3 {
     width: 130px; height: 130px; bottom: 40px; right: 60px;
     border-radius: 50%;
-    border: 12px solid rgba(245,158,11,0.09);
+    border: 12px solid rgba(217,164,65,0.16);
 }
 /* cincin navy kanan bawah */
 .pu-decor-bottom .b4 {
     width: 70px; height: 70px; bottom: 120px; right: 220px;
     border-radius: 50%;
-    border: 9px solid rgba(30,58,95,0.06);
+    border: 9px solid rgba(35,57,91,0.11);
 }
 </style>
 
